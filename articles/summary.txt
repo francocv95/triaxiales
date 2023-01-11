@@ -1,0 +1,133 @@
+ARTÍCULOS 
+
+1) Condition Monitoring Using Accelerometer Readings: 
+
+Intro: 
+	Se utilizan propiedades de dominios temporales y frecuenciales para categorizar muestras (con cierta probabilidad),  
+        a partir de algoritmos de ML para saber a que tipo de máquina pertenece cada set de datos.
+
+
+Datasets y Propiedades: 
+
+	Se utilizan datos crudos temporales de aprox 4096 registros por muestra obtenidos de acelerómetros 
+	(dichos datos se post-procesan en aceleraciones y velocidades en los 3 ejes y se aplica TRF).  
+
+	En dominio temporal se calculan RMS, pico, kurtosis y factor de cresta tanto para la aceleración y velocidad 
+	en cada dirección (X, 	Y, Z). Entonces 4x2x3 da 24 propiedades, que se utilizarán para la clasificación. 
+
+	Para el dominio de frecuencias usan una resolción de 2 Hz. Y obtienen una cantidad de features elevada (sólo se 
+	quedan con las de eje Z)
+
+
+Filtrado: 
+
+	Para definir si una muestra es correcta o no, se usa velocidad RMS de eje Z. Los valores extremos del rango normal se descartan
+	y esto permite discrimiar tipos de máquinas con mayor precisión. Para eso realizan técnicas de clustering y seleccionan los 
+	clusters que están más cercanos. Sobre este nuevo dataset es que se relizará la clasificación.  
+	  
+	  
+Clasificación: 
+
+	No hay suficiente data de condiciones de fallas como para hacer un algoritmo que clasifique de falla/no falla. Entonces se 
+	realiza prueba de conceptos que busca clasificar a que máquina pertenecen los datos estudiados.   
+	
+	Hay una máquina que tiene pocos puntos etiquetados como fallas y lo que se hace, una vez clasificada, es aplicar un 
+	algoritmo no supervisado (como mix of Gaussians) para poder identificar puntos normales y correctos. 
+
+
+2) A systematic literature review of machine learning methods applied to predictive maintenance
+
+Intro: 
+
+	Se muestran una serie de artículos que utilizan diferentes modelos de ML para realizar PdM (cada aplicación de PdM usa un
+	equipamiento específico. Se presentan datasets de estudio.
+	
+	
+Systematic review:  
+	
+	- Entre los algoritmos de ML más utilizados se encuentra RF. 
+	- Hay una preferencia por usar datos de señales vibracionales para detectar anomalías en equipos. 
+	- No hay preferencia por un equipo en especial para implementar una estrategia de PdM
+
+
+3) Fault Classification of Industrial Motor
+
+Intro:
+
+	Se miden vibraciones mediante un acelerómetro y se utilizan datos tanto en dominio temporal como de frecuencia. 
+	
+
+Análisis: 
+	
+	Se utiliza RF como algoritmo de ML
+	Se utilizan los parámetros RMS, K, CF (en dominio temportal). Cabe destacar que para un análisis frecuencial debiera 
+	cumplirse que la señal es estacionaria. 
+	
+
+Datos: 
+
+	Se utilizan datos del banco de datos que encontré anteriorimente 
+	
+	
+Resultados:
+
+	Se generarn gráficos temporales y frecuenciales. 
+	En los temporales se observa una diferencia de amplitud entre equipo con y sin fallas. Sin embargo los espectros son similares. 
+	En los frecuenciales se evidencian diferencias más marcadas que permitirían potencialmente una mejor distinción para 
+	la clasificación. 
+
+	
+4) Comparison of ML models (time and frequency)
+
+Intro: 
+
+	Se compara efectividad de PdM entre dominio temporal y frecuencial para datos vibracionales. Se presentan los modelos de ML 
+	propuestos (redes neuronales son predilectas). 
+	
+Experimento: 
+
+	Montaje experimental que usará 4 acelerómetros en diferentes secciones. 5 condiciones (1 sana, 4 de falla) 
+	
+	
+Modelos propuestos:
+	
+	Se estudian propiedades tales como: RMS, varianza, curtosis y asimetría. 
+	Para dominio de frecuencias se usa FFT	
+	Se utiliza una red neuronal de 4 capas ocultas y un output de 5 clases. El número de neuronas por capa varía. 
+	
+	
+Conslusiones:
+
+	El uso simultáneo de datos provenientes de más de una poisición parece ser más eficiente que el análisis indicvidual. 
+	El dominio temporal presenta mayor precisión que el de frecuencias y computacionalmente es mucho menos costoso que este último
+
+
+
+DATASETS
+
+El paso siguiente al estudio de artículos consta de extraer datos de alguna base de datos pre-existente para tratar de replicar, vía 
+reposirotios o artículos, lo investigado. 
+
+En general, las referencias a datasets públicos no es directa. Sin embargo, en una primera instancia se encontró que existe un 
+centro de datos de rodaduras (https://engineering.case.edu/bearingdatacenter/) que podría ser de utilidad. 
+
+Basado en las últimas investigaciones, se encontró que el artículo 3 utiliza justamente dicho banco de datos. Por lo tanto parece un 
+buen punto de partida comenzar a extraer información de dicha página web para realizar, en primera instancia, una exploración de la
+naturaleza de los datos y posteriormente una prueba de conceptos elemental.   
+	
+	
+REPOSITORIOS 
+
+Existe un resumen de repositorios relacionados a PdM pero no tienen correspondencia con los artículos estudiados, 
+la obtención de datasets desde aquí no parece de gran ayuda por el momento aunque puede ser de utilidad para implementar algunas 
+técnicas de procesamiento o modelado.
+ 
+Link: https://github.com/topics/predictive-maintenance
+
+
+
+RESUMEN
+
+En base a los artículos investigados se propone manipular datasets de un banco de datos para implementar, en primera instancia, 
+la siguiente prueba de concepto: Generar gráficos en el dominio temporal y extraer algunas de las propiedades que son comunes a 
+varios artículos, tales como RMS, pico, curstosis, etc.  
